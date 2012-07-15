@@ -36,7 +36,8 @@ module Klarna
           ]
           self.call(:get_addresses, *params).tap do |result|
             result = result.first
-            result[5] = ::Klarna::API.id_for(:country, result[5]) # TODO: Return symbol from ID
+            country_id = ::Klarna::API.id_for(:country, result[5])
+            result[5] = ::Klarna::API::COUNTRIES.key(country_id)
           end
         end
 
