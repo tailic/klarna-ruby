@@ -21,7 +21,7 @@ module Klarna
       }.freeze
 
       PROTOCOL_ENCODING = 'iso-8859-1'.freeze # NOTE: New API supports: ['UTF-8', 'ISO-8859-1', 'US-ASCII'].freeze
-      PROTOCOL_VERSION = '4.0'.freeze
+      PROTOCOL_VERSION = '4.1'.freeze
 
       # -----------------------------------------------------------------------
       #  General
@@ -589,6 +589,15 @@ module Klarna
         CURRENCIES[:NOK] => 9500.00,
         CURRENCIES[:EUR] => 895.00,
         CURRENCIES[:DKK] => 8900.00
+      }.freeze
+      
+      # -----------------------------------------------------------------------
+      #  Genders
+      # -----------------------------------------------------------------------
+
+      GENDERS = {
+        :FEMALE => 0,
+        :MALE => 1
       }.freeze
 
       # -----------------------------------------------------------------------

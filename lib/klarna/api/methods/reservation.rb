@@ -8,35 +8,45 @@ module Klarna
         # Reserve a purchase amount for a specific customer. The reservation is valid, by default, for 7 days.
         # Pass cellphone no. instead of Pno for SMS payments.
         #
-        def reserve_amount(pno_or_cellphone, amount, goods_list, reference, reference_code, order_id_1, order_id_2,
-                            client_ip, shipping_address, invoicing_address, email, phone, cell_phone,
-                            currency_code, country_code, language_code, pno_encoding, pclass, annual_salary = nil, flags = nil)
-          # params = [
-          #   pno_or_cellphone,
-          #   amount,
-          #   reference,
-          #   reference_code,
-          #   order_id_1,
-          #   order_id_2,
-          #   shipping_address,
-          #   invoicing_address,
-          #   email,
-          #   phone,
-          #   cell_phone,
-          #   client_ip,
-          #   flags,
-          #   currency_code,
-          #   country_code,
-          #   language_code,
-          #   self.store_id,
-          #   self.digest(pno_or_cellphone, amount),
-          #   pno_encoding,
-          #   (pclass || KRED_DEFAULT_PCLASS),
-          #   (annual_salary || KRED_DEFAULT_YSALARY),
-          #   goods_list
-          # ]
-          # self.call(:reserve_amount, *params)
-          raise NotImplementedError
+        def reserve_amount(pno, gender, amount, reference, reference_code, order_id_1, order_id_2,
+                            shipping_address, invoicing_address, client_ip, currency_code, country_code,
+                            language_code, pno_encoding, pclass, goods_list, comment,
+                            shipmentinfo, travelinfo, bankinfo,
+                            session_id = [], extra_info = [], annual_salary = [], flags = 0)
+          params = [
+            pno,
+            gender,
+            amount,
+            reference,
+            reference_code,
+            order_id_1,
+            order_id_2,
+            shipping_address,
+            invoicing_address,
+            client_ip,
+            flags,
+            currency_code,
+            country_code,
+            language_code,
+            self.store_id,
+            self.digest(pno, amount),
+            pno_encoding,
+            (pclass || ::Klarna::API::DEFAULTS[:PCLASS]),
+            goods_list,
+            comment,
+            shipmentinfo,
+            travelinfo,
+            [(annual_salary || ::Klarna::API::DEFAULTS[:YSALARY])],
+            bankinfo,
+            session_id,
+            extra_info
+          ]
+          
+          self.call(:reserve_amount, *params).tap do |result|
+            debugger
+            
+            result = result.first
+          end
         end
 
         # Activate purchases which have been previously reserved with the reserve_amount function.
@@ -130,16 +140,15 @@ module Klarna
         # Create addresses for arguments such as the +activate_reservation+ function.
         #
         def make_reservation_address(first_name, last_name, street_address, zip, city, country_code, house_number = nil)
-          # {
-          #   :fname        => first_name,
-          #   :lname        => last_name,
-          #   :street       => street_address,
-          #   :zip          => zip,
-          #   :city         => city,
-          #   :country      => ::Klarna::API.id_for(:country, country_code),
-          #   :house_number => house_number
-          # }.with_indifferent_access
-          raise NotImplementedError
+          {
+            :fname        => first_name,
+            :lname        => last_name,
+            :street       => street_address,
+            :zip          => zip,
+            :city         => city,
+            :country      => ::Klarna::API.id_for(:country, country_code),
+            :house_number => house_number
+          }.with_indifferent_access
         end
         alias :mk_reservation_address :make_reservation_address
 
