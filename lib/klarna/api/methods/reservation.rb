@@ -43,8 +43,6 @@ module Klarna
           ]
           
           self.call(:reserve_amount, *params).tap do |result|
-            debugger
-            
             result = result.first
           end
         end
