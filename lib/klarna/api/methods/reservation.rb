@@ -139,7 +139,7 @@ module Klarna
 
         # Create addresses for arguments such as the +activate_reservation+ function.
         #
-        def make_reservation_address(first_name, last_name, street_address, zip, city, country_code, house_number = nil)
+        def make_reservation_address(first_name, last_name, street_address, zip, city, country_code, house_number = '')
           {
             :fname        => first_name,
             :lname        => last_name,
