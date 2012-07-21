@@ -95,18 +95,19 @@ module Klarna
 
         # Split a reservation due to for example outstanding articles.
         #
-        def split_reservation(reservation_id, split_amount, order_id_1, order_id_2, flags = nil)
-          # params = [
-          #   reservation_id,
-          #   split_amount,
-          #   order_id_1,
-          #   order_id_2,
-          #   flags.to_i,
-          #   self.store_id,
-          #   self.digest(reservation_id, split_amount)
-          # ]
-          # self.call(:split_reservation, *params)
-          raise NotImplementedError
+        def split_reservation(reservation_id, split_amount, order_id_1, order_id_2, flags = 0)
+          params = [
+            reservation_id,
+            split_amount,
+            order_id_1,
+            order_id_2,
+            flags.to_i,
+            self.store_id,
+            self.digest(reservation_id, split_amount)
+          ]
+          self.call(:split_reservation, *params).tap do |result|
+            result = result.first
+          end
         end
 
         # Change a reservation.
