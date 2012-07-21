@@ -8,21 +8,20 @@ module Klarna
         # Reserve a purchase amount for a specific customer. The reservation is valid, by default, for 7 days.
         # Pass cellphone no. instead of Pno for SMS payments.
         #
-        def reserve_amount(pno, gender, amount, reference, reference_code, order_id_1, order_id_2,
-                            shipping_address, invoicing_address, client_ip, currency_code, country_code,
-                            language_code, pno_encoding, pclass, goods_list, comment,
-                            shipmentinfo, travelinfo, bankinfo,
-                            session_id = [], extra_info = [], annual_salary = nil, flags = 0)
+        def reserve_amount(pno, amount, order_id, delivery_address, billing_address, client_ip, currency_code,
+                           country_code, language_code, pno_encoding, pclass, goods_list,
+                           shipmentinfo = '', reference = '', reference_code = '', comment = '', travelinfo ='', bankinfo = '', gender = '',
+                           session_id = [], extra_info = [], annual_salary = nil, flags = 0)
           params = [
             pno,
             gender,
             amount,
             reference,
             reference_code,
-            order_id_1,
-            order_id_2,
-            shipping_address,
-            invoicing_address,
+            order_id,
+            order_id,
+            delivery_address,
+            billing_address,
             client_ip,
             flags,
             currency_code,
