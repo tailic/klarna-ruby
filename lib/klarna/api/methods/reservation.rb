@@ -111,15 +111,17 @@ module Klarna
 
         # Change a reservation.
         #
-        def change_reservation(reservation_id, new_amount)
-          # params = [
-          #   reservation_id,
-          #   new_amount,
-          #   self.store_id,
-          #   self.digest(reservation_id, new_amount)
-          # ]
-          # self.call(:change_reservation, *params)
-          raise NotImplementedError
+        def change_reservation(reservation_id, new_amount, flags = 0)
+          params = [
+            reservation_id,
+            new_amount,
+            self.store_id,
+            self.digest(reservation_id, new_amount),
+            flags
+          ]
+          self.call(:change_reservation, *params).tap do |result|
+            result = result.first
+          end
         end
 
         # Reserves one or more OCR numbers for your store.
