@@ -10,7 +10,7 @@ module Klarna
         #
         def reserve_amount(pno, amount, order_id, delivery_address, billing_address, client_ip, currency_code,
                            country_code, language_code, pno_encoding, pclass, goods_list,
-                           shipmentinfo = '', reference = '', reference_code = '', comment = '', travelinfo ='', bankinfo = '', gender = '',
+                           shipmentinfo = '', reference = '', reference_code = '', comment = '', travelinfo ='', bankinfo = '', gender = 0,
                            session_id = [], extra_info = [], annual_salary = nil, flags = 0)
           params = [
             pno,
