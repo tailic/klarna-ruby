@@ -142,15 +142,19 @@ module Klarna
 
         # Create addresses for arguments such as the +activate_reservation+ function.
         #
-        def make_reservation_address(first_name, last_name, street_address, zip, city, country_code, house_number = '')
+        def make_reservation_address(email, telno, cellno, first_name, last_name, street_address, zip, city, country_code, house_number = '', house_extension = '')
           {
-            :fname        => first_name,
-            :lname        => last_name,
-            :street       => street_address,
-            :zip          => zip,
-            :city         => city,
-            :country      => ::Klarna::API.id_for(:country, country_code),
-            :house_number => house_number
+            :email            => (email || ''),
+            :telno            => (telno || ''),
+            :cellno           => (cellno || ''),
+            :fname            => (first_name || ''),
+            :lname            => (last_name || ''),
+            :street           => (street_address || ''),
+            :zip              => (zip || ''),
+            :city             => (city || ''),
+            :country          => (::Klarna::API.id_for(:country, country_code) || ''),
+            :house_number     => (house_number || ''),
+            :house_extension  => (house_extension || '')
           }.with_indifferent_access
         end
         alias :mk_reservation_address :make_reservation_address
