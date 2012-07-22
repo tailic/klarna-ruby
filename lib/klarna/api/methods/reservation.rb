@@ -51,7 +51,7 @@ module Klarna
         def activate_reservation(reservation_id, pno, order_id_1, order_id_2, delivery_address, billing_address, client_ip,
                                  currency_code, country_code, language_code, pno_encoding, pclass, goods_list,
                                  ocr = '', reference = '', reference_code = '', comment = '',
-                                 shipmentinfo = 1, travel_info = {}, bank_info = {}, session_id = {}, extra_info = {},
+                                 shipmentinfo = 0, travel_info = {}, bank_info = {}, session_id = {}, extra_info = {},
                                  annual_salary = nil, gender = 0, flags = 0)
           params = [
             reservation_id,
