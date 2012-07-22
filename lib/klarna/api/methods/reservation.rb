@@ -48,37 +48,41 @@ module Klarna
 
         # Activate purchases which have been previously reserved with the reserve_amount function.
         #
-        def activate_reservation(reservation_id, pno, ocr, goods_list, reference, reference_code, order_id_1, order_id_2,
-                                 client_ip, shipping_address, invoicing_address, shipment_type, email, phone, cell_phone,
-                                 currency_code, country_code, language_code, pno_encoding, pclass, annual_salary = nil, flags = nil)
-          # params = [
-          #   reservation_id,
-          #   pno,
-          #   (ocr || KRED_DEFAULT_OCR),
-          #   goods_list,
-          #   reference,
-          #   reference_code,
-          #   order_id_1,
-          #   order_id_2,
-          #   shipping_address,
-          #   invoicing_address,
-          #   shipment_type,
-          #   email,
-          #   phone,
-          #   cell_phone,
-          #   client_ip,
-          #   flags,
-          #   currency_code,
-          #   country_code,
-          #   language_code,
-          #   self.store_id,
-          #   self.digest(pno, goods_list),
-          #   pno_encoding,
-          #   (pclass || KRED_DEFAULT_PCLASS),
-          #   (annual_salary || KRED_DEFAULT_YSALARY)
-          # ]
-          # self.call(:activate_reservation, *params)
-          raise NotImplementedError
+        def activate_reservation(reservation_id, pno, order_id_1, order_id_2, delivery_address, billing_address, client_ip,
+                                 currency_code, country_code, language_code, pno_encoding, pclass, goods_list,
+                                 ocr = '', reference = '', reference_code = '', comment = '',
+                                 shipmentinfo = 1, travel_info = {}, bank_info = {}, session_id = {}, extra_info = {},
+                                 annual_salary = nil, gender = 0, flags = 0)
+          params = [
+            reservation_id,
+            ocr,
+            pno,
+            gender,
+            reference,
+            reference_code,
+            order_id_1,
+            order_id_2,
+            delivery_address,
+            billing_address,
+            client_ip,
+            flags,
+            currency_code,
+            country_code,
+            language_code,
+            self.store_id,
+            self.digest(pno, goods_list),
+            pno_encoding,
+            (pclass || ::Klarna::API::DEFAULTS[:PCLASS]),
+            goods_list,
+            comment,
+            { delay_adjust: shipmentinfo },
+            travel_info,
+            { yearly_salary: (annual_salary || ::Klarna::API::DEFAULTS[:YSALARY]) },
+            bank_info,
+            session_id,
+            extra_info
+          ]
+          self.call(:activate_reservation, *params)
         end
 
         # Cancel a reservation.
