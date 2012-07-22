@@ -84,13 +84,12 @@ module Klarna
         # Cancel a reservation.
         #
         def cancel_reservation(reservation_id)
-          # params = [
-          #   reservation_id,
-          #   self.store_id,
-          #   self.digest(reservation_id)
-          # ]
-          # self.call(:cancel_reservation, *params)
-          raise NotImplementedError
+          params = [
+            reservation_id,
+            self.store_id,
+            self.digest(reservation_id)
+          ]
+          self.call(:cancel_reservation, *params)
         end
 
         # Split a reservation due to for example outstanding articles.
