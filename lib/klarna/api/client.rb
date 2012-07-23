@@ -56,13 +56,13 @@ module Klarna
       def call(service_method, *args)
         args.collect! { |arg| arg.is_a?(String) ? ::Klarna::API.decode(arg) : arg }
         ::Klarna.log "Method: #{service_method}"
-        ::Klarna.log "Params: %s" % self.add_meta_params(*args).inspect
+        ::Klarna.log "Params: %s" % args.inspect #self.add_meta_params(*args).inspect
 
         self.last_request_headers = http_header_extra
 
         begin
           ::Klarna.log_result("Result: %s") do
-            params = self.add_meta_params(*args)
+            params = args #self.add_meta_params(*args)
             self.last_request_params = params
             self.last_response = super(service_method, *params)
           end

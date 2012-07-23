@@ -11,6 +11,8 @@ module Klarna
         def reserve_amount(params)
           
           xmlrpc_params = [
+            ::Klarna::API::PROTOCOL_VERSION,
+            ::XMLRPC::Client::USER_AGENT,
             params[:pno],
             params[:gender] || 0,
             params[:amount],
@@ -48,7 +50,9 @@ module Klarna
         #
         def activate_reservation(params)
                                    
-          xmlrpc_params = [[
+          xmlrpc_params = [
+            ::Klarna::API::PROTOCOL_VERSION,
+            ::XMLRPC::Client::USER_AGENT,
             params[:reservation_id],
             params[:ocr] || '',
             params[:pno],
@@ -65,7 +69,7 @@ module Klarna
             params[:country],
             params[:language],
             self.store_id,
-            self.digest(params[:pno], params[:goods_list]),
+            self.digest(params[:pno], params[:goods_list].map{ |goods| goods[:goods][:artno]+':'+goods[:qty].to_s } ),
             params[:pno_encoding],
             (params[:pclass] || ::Klarna::API::DEFAULTS[:PCLASS]),
             params[:goods_list],
@@ -73,10 +77,12 @@ module Klarna
             params[:shipmentinfo] || { delay_adjust: 1 },
             params[:travelinfo] || [],
             params[:income_expense] || [::Klarna::API::DEFAULTS[:YSALARY]],
-            params[:bankinfo] || [],
             params[:session_id] || [],
             params[:extra_info] || []
-          ]]
+          ]
+          
+          xmlrpc_params = [xmlrpc_params] # Klarna needs all values to be in first param for activate_reservation only
+          
           self.call(:activate_reservation, *xmlrpc_params)
         end
 
@@ -84,6 +90,8 @@ module Klarna
         #
         def cancel_reservation(params)
           xmlrpc_params = [
+            ::Klarna::API::PROTOCOL_VERSION,
+            ::XMLRPC::Client::USER_AGENT,
             params[:reservation_id],
             self.store_id,
             self.digest(params[:reservation_id])
@@ -96,6 +104,8 @@ module Klarna
         def split_reservation(params)
           
           xmlrpc_params = [
+            ::Klarna::API::PROTOCOL_VERSION,
+            ::XMLRPC::Client::USER_AGENT,
             params[:reservation_id],
             params[:split_amount],
             params[:order_id_1],
@@ -114,6 +124,8 @@ module Klarna
         def change_reservation(params)
           
           xmlrpc_params = [
+            ::Klarna::API::PROTOCOL_VERSION,
+            ::XMLRPC::Client::USER_AGENT,
             params[:reservation_id],
             params[:new_amount],
             self.store_id,
@@ -129,6 +141,8 @@ module Klarna
         #
         def reserve_ocr_numbers(number_of_ocrs)
           # params = [
+          #   ::Klarna::API::PROTOCOL_VERSION,
+          #   ::XMLRPC::Client::USER_AGENT,
           #   number_of_ocrs,
           #   self.store_id,
           #   self.digest(number_of_ocrs)
