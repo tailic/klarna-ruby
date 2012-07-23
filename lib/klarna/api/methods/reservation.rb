@@ -8,122 +8,119 @@ module Klarna
         # Reserve a purchase amount for a specific customer. The reservation is valid, by default, for 7 days.
         # Pass cellphone no. instead of Pno for SMS payments.
         #
-        def reserve_amount(pno, amount, order_id, delivery_address, billing_address, client_ip, currency_code,
-                           country_code, language_code, pno_encoding, pclass, goods_list,
-                           shipmentinfo = '', reference = '', reference_code = '', comment = '', travelinfo ='', bankinfo = '', gender = 0,
-                           session_id = [], extra_info = [], annual_salary = nil, flags = 0)
-          params = [
-            pno,
-            gender,
-            amount,
-            reference,
-            reference_code,
-            order_id,
-            order_id,
-            delivery_address,
-            billing_address,
-            client_ip,
-            flags,
-            currency_code,
-            country_code,
-            language_code,
+        def reserve_amount(params)
+          
+          xmlrpc_params = [
+            params[:pno],
+            params[:gender] || 0,
+            params[:amount],
+            params[:reference] || '',
+            params[:reference_code] || '',
+            params[:order_id],
+            params[:order_id],
+            params[:delivery_address],
+            params[:billing_address],
+            params[:client_ip] || '0.0.0.0',
+            params[:flags] || 0,
+            params[:currency_code],
+            params[:country_code],
+            params[:language_code],
             self.store_id,
-            self.digest(pno, amount),
-            pno_encoding,
-            (pclass || ::Klarna::API::DEFAULTS[:PCLASS]),
-            goods_list,
-            comment,
-            shipmentinfo,
-            travelinfo,
-            [(annual_salary || ::Klarna::API::DEFAULTS[:YSALARY])],
-            bankinfo,
-            session_id,
-            extra_info
+            self.digest(params[:pno], params[:amount]),
+            params[:pno_encoding],
+            (params[:pclass] || ::Klarna::API::DEFAULTS[:PCLASS]),
+            params[:goods_list],
+            params[:comment] || '',
+            params[:shipmentinfo] || '',
+            params[:travelinfo] || '',
+            [(params[:annual_salary] || ::Klarna::API::DEFAULTS[:YSALARY])],
+            params[:bankinfo] || '',
+            params[:session_id] || [],
+            params[:extra_info] ||[]
           ]
           
-          self.call(:reserve_amount, *params).tap do |result|
+          self.call(:reserve_amount, *xmlrpc_params).tap do |result|
             result = result.first
           end
         end
 
         # Activate purchases which have been previously reserved with the reserve_amount function.
         #
-        def activate_reservation(reservation_id, pno, order_id_1, order_id_2, delivery_address, billing_address, client_ip,
-                                 currency_code, country_code, language_code, pno_encoding, pclass, goods_list,
-                                 ocr = '', reference = '', reference_code = '', comment = '',
-                                 shipmentinfo = 0, travel_info = {}, bank_info = {}, session_id = {}, extra_info = {},
-                                 annual_salary = nil, gender = 0, flags = 0)
-          params = [
-            reservation_id,
-            ocr,
-            pno,
-            gender,
-            reference,
-            reference_code,
-            order_id_1,
-            order_id_2,
-            delivery_address,
-            billing_address,
-            client_ip,
-            flags,
-            currency_code,
-            country_code,
-            language_code,
+        def activate_reservation(params)
+                                   
+          xmlrpc_params = [
+            params[:reservation_id],
+            params[:ocr] || '',
+            params[:pno],
+            params[:gender] || 0,
+            params[:reference] || '',
+            params[:reference_code] || '',
+            params[:order_id_1],
+            params[:order_id_2],
+            params[:delivery_address],
+            params[:billing_address],
+            params[:client_ip] || '0.0.0.0',
+            params[:flags] || 0,
+            params[:currency_code],
+            params[:country_code],
+            params[:language_code],
             self.store_id,
-            self.digest(pno, goods_list),
-            pno_encoding,
-            (pclass || ::Klarna::API::DEFAULTS[:PCLASS]),
-            goods_list,
-            comment,
-            { delay_adjust: shipmentinfo },
-            travel_info,
-            { yearly_salary: (annual_salary || ::Klarna::API::DEFAULTS[:YSALARY]) },
-            bank_info,
-            session_id,
-            extra_info
+            self.digest(params[:pno], params[:goods_list]),
+            params[:pno_encoding],
+            (params[:pclass] || ::Klarna::API::DEFAULTS[:PCLASS]),
+            params[:goods_list],
+            params[:comment] || '',
+            params[:shipmentinfo] || '', #{ delay_adjust: shipmentinfo }
+            params[:travel_info] || '',
+            [(params[:annual_salary] || ::Klarna::API::DEFAULTS[:YSALARY])], # { yearly_salary: (annual_salary || ::Klarna::API::DEFAULTS[:YSALARY]) },
+            params[:bankinfo] || '',
+            params[:session_id] || [],
+            params[:extra_info] ||[]
           ]
-          self.call(:activate_reservation, *params)
+          self.call(:activate_reservation, *xmlrpc_params)
         end
 
         # Cancel a reservation.
         #
-        def cancel_reservation(reservation_id)
-          params = [
-            reservation_id,
+        def cancel_reservation(params)
+          xmlrpc_params = [
+            params[:reservation_id],
             self.store_id,
-            self.digest(reservation_id)
+            self.digest(params[:reservation_id])
           ]
-          self.call(:cancel_reservation, *params)
+          self.call(:cancel_reservation, *xmlrpc_params)
         end
 
         # Split a reservation due to for example outstanding articles.
         #
-        def split_reservation(reservation_id, split_amount, order_id_1, order_id_2, flags = 0)
-          params = [
-            reservation_id,
-            split_amount,
-            order_id_1,
-            order_id_2,
-            flags.to_i,
+        def split_reservation(params)
+          
+          xmlrpc_params = [
+            params[:reservation_id],
+            params[:split_amount],
+            params[:order_id_1],
+            params[:order_id_2],
+            params[:flags].to_i || 0,
             self.store_id,
-            self.digest(reservation_id, split_amount)
+            self.digest(params[:reservation_id], params[:split_amount])
           ]
-          self.call(:split_reservation, *params).tap do |result|
+          self.call(:split_reservation, *xmlrpc_params).tap do |result|
             result = result.first
           end
         end
 
         # Change a reservation.
         #
-        def change_reservation(reservation_id, new_amount, flags = 0)
-          params = [
-            reservation_id,
-            new_amount,
+        def change_reservation(params)
+          
+          xmlrpc_params = [
+            params[:reservation_id],
+            params[:new_amount],
             self.store_id,
-            self.digest(reservation_id, new_amount),
+            self.digest(params[:reservation_id], params[:new_amount]),
             flags
           ]
-          self.call(:change_reservation, *params).tap do |result|
+          self.call(:change_reservation, *xmlrpc_params).tap do |result|
             result = result.first
           end
         end
@@ -142,21 +139,20 @@ module Klarna
 
         # Create addresses for arguments such as the +activate_reservation+ function.
         #
-        def make_reservation_address(email, telno, cellno, first_name, last_name, street_address, zip, city, country_code,
-                                     company = '', house_number = '', house_extension = '')
-          {
-            :email            => (email || ''),
-            :telno            => (telno || ''),
-            :cellno           => (cellno || ''),
-            :fname            => (first_name || ''),
-            :lname            => (last_name || ''),
-            :company          => (company || ''),
-            :street           => (street_address || ''),
-            :zip              => (zip || ''),
-            :city             => (city || ''),
-            :country          => (::Klarna::API.id_for(:country, country_code) || ''),
-            :house_number     => (house_number || ''),
-            :house_extension  => (house_extension || '')
+        def make_reservation_address(params)
+          {                              
+            :email            => (params[:email] || ''),
+            :telno            => (params[:telno] || ''),
+            :cellno           => (params[:cellno] || ''),
+            :fname            => (params[:fname] || ''),
+            :lname            => (params[:lname] || ''),
+            :company          => (params[:company] || ''),
+            :street           => (params[:street] || ''),
+            :zip              => (params[:zip] || ''),
+            :city             => (params[:city] || ''),
+            :country          => (::Klarna::API.id_for(:country, params[:country]) || ''),
+            :house_number     => (params[:house_number] || ''),
+            :house_extension  => (params[:house_extension] || '')
           }.with_indifferent_access
         end
         alias :mk_reservation_address :make_reservation_address
