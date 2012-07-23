@@ -31,7 +31,7 @@ module Klarna
             (params[:pclass] || ::Klarna::API::DEFAULTS[:PCLASS]),
             params[:goods_list],
             params[:comment] || '',
-            params[:shipmentinfo] || {},
+            params[:shipmentinfo] || { delay_adjust: 1 },
             params[:travelinfo] || {},
             params[:income_expense] || { yearly_salary: ::Klarna::API::DEFAULTS[:YSALARY] },
             params[:bankinfo] || {},
@@ -48,7 +48,7 @@ module Klarna
         #
         def activate_reservation(params)
                                    
-          xmlrpc_params = [
+          xmlrpc_params = [[
             params[:reservation_id],
             params[:ocr] || '',
             params[:pno],
@@ -70,13 +70,13 @@ module Klarna
             (params[:pclass] || ::Klarna::API::DEFAULTS[:PCLASS]),
             params[:goods_list],
             params[:comment] || '',
-            params[:shipmentinfo] || {},
+            params[:shipmentinfo] || { delay_adjust: 1 },
             params[:travelinfo] || {},
             params[:income_expense] || { yearly_salary: ::Klarna::API::DEFAULTS[:YSALARY] },
             params[:bankinfo] || {},
             params[:session_id] || {},
             params[:extra_info] || {}
-          ]
+          ]]
           self.call(:activate_reservation, *xmlrpc_params)
         end
 
@@ -147,6 +147,7 @@ module Klarna
             :fname            => (params[:fname] || ''),
             :lname            => (params[:lname] || ''),
             :company          => (params[:company] || ''),
+            :careof           => (params[:careof] || ''),
             :street           => (params[:street] || ''),
             :zip              => (params[:zip] || ''),
             :city             => (params[:city] || ''),
