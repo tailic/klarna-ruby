@@ -31,12 +31,12 @@ module Klarna
             (params[:pclass] || ::Klarna::API::DEFAULTS[:PCLASS]),
             params[:goods_list],
             params[:comment] || '',
-            params[:shipmentinfo] || '',
-            params[:travelinfo] || '',
-            [(params[:annual_salary] || ::Klarna::API::DEFAULTS[:YSALARY])],
-            params[:bankinfo] || '',
-            params[:session_id] || [],
-            params[:extra_info] ||[]
+            params[:shipmentinfo] || {},
+            params[:travelinfo] || {},
+            params[:income_expense] || { yearly_salary: ::Klarna::API::DEFAULTS[:YSALARY] },
+            params[:bankinfo] || {},
+            params[:session_id] || {},
+            params[:extra_info] || {}
           ]
           
           self.call(:reserve_amount, *xmlrpc_params).tap do |result|
@@ -70,12 +70,12 @@ module Klarna
             (params[:pclass] || ::Klarna::API::DEFAULTS[:PCLASS]),
             params[:goods_list],
             params[:comment] || '',
-            params[:shipmentinfo] || '', #{ delay_adjust: shipmentinfo }
-            params[:travel_info] || '',
-            [(params[:annual_salary] || ::Klarna::API::DEFAULTS[:YSALARY])], # { yearly_salary: (annual_salary || ::Klarna::API::DEFAULTS[:YSALARY]) },
-            params[:bankinfo] || '',
-            params[:session_id] || [],
-            params[:extra_info] ||[]
+            params[:shipmentinfo] || {},
+            params[:travelinfo] || {},
+            params[:income_expense] || { yearly_salary: ::Klarna::API::DEFAULTS[:YSALARY] },
+            params[:bankinfo] || {},
+            params[:session_id] || {},
+            params[:extra_info] || {}
           ]
           self.call(:activate_reservation, *xmlrpc_params)
         end
