@@ -27,6 +27,8 @@ module Klarna
           pno_encoding = ::Klarna::API.id_for(:pno_format, pno_encoding)
           address_type = ::Klarna::API.id_for(:address_format, address_type)
           params = [
+            ::Klarna::API::PROTOCOL_VERSION,
+            ::XMLRPC::Client::USER_AGENT,
             pno,
             self.store_id,
             self.digest(pno),
