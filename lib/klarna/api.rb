@@ -64,8 +64,11 @@ module Klarna
         rescue
           raise ::Klarna::API::KlarnaArgumentError, "Invalid '#{kind}': #{value.inspect}"
         end
-
-        key ? key.to_sym : nil
+        
+        if !key
+          raise ::Klarna::API::KlarnaStandardError, "Key not found for '#{kind}': #{value.inspect}"
+        end
+        key.to_sym
       end
 
       def id_for(kind, value)
@@ -82,8 +85,11 @@ module Klarna
         rescue
           raise ::Klarna::API::KlarnaArgumentError, "Invalid '#{kind}': #{value.inspect}"
         end
-
-        id ? id.to_i : nil
+        
+        if !id
+          raise ::Klarna::API::KlarnaStandardError, "Id not found for '#{kind}': #{value.inspect}"
+        end
+        id.to_i
       end
 
       # Validate if specified +kind+ is a valid constant.
