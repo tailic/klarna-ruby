@@ -129,8 +129,7 @@ module Klarna
             params[:reservation_id],
             params[:new_amount],
             self.store_id,
-            self.digest(params[:reservation_id], params[:new_amount]),
-            flags
+            self.digest(params[:reservation_id], params[:new_amount])
           ]
           self.call(:change_reservation, *xmlrpc_params).tap do |result|
             result = result.first
