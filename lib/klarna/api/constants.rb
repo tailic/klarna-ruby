@@ -612,7 +612,7 @@ module Klarna
         },
         :NO => {
           :country  => COUNTRIES[:NO],
-          :lang     => LANGUAGES[:NO],
+          :lang     => LANGUAGES[:NB],
           :currency => CURRENCIES[:NOK],
           :pno      => PNO_FORMATS[:NO]
         },
