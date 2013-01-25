@@ -68,8 +68,6 @@ module Klarna
           end
         rescue ::XMLRPC::FaultException => e
           raise ::Klarna::API::KlarnaServiceError.new(e.faultCode, e.faultString)
-        rescue ::Timeout::Error => e
-          raise ::Klarna::API::KlarnaServiceError.new(-1, e.message)
         end
       end
 
