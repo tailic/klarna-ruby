@@ -42,11 +42,11 @@ describe Klarna::API::Methods::Standard do
       it 'should return address for a valid pno' do
         result = @klarna.get_addresses("4304158399", :SE)
         assert_equal [@protocol_version, @user_agent, "4304158399", @klarna.store_id, @klarna.digest("4304158399"), 2, 5, '127.0.0.1'], @klarna.last_request_params
-        assert_equal [["Karl", "Lidin", "Junibacksg 42", "23634", "Hollviken", 209]], result
+        assert_equal [["Karl", "Lidin", "Junibacksg 42", "23634", "Hollviken", :SE]], result
 
         result = @klarna.get_addresses("5311096845", :SE)
         assert_equal [@protocol_version, @user_agent, "5311096845", @klarna.store_id, @klarna.digest("5311096845"), 2, 5, '127.0.0.1'], @klarna.last_request_params
-        assert_equal [["Maud", "Johansson", "Köpmansg 7", "12149", "Johanneshov", 209]], result
+        assert_equal [["Maud", "Johansson", "Köpmansg 7", "12149", "Johanneshov", :SE]], result
       end
 
       it 'should ignore format symbols in pno' do
@@ -63,7 +63,7 @@ describe Klarna::API::Methods::Standard do
 
     it 'should only return first returned address for a valid SSN' do
       result = @klarna.get_address("4304158399", :SE)
-      assert_equal ["Karl", "Lidin", "Junibacksg 42", "23634", "Hollviken", 209], result
+      assert_equal ["Karl", "Lidin", "Junibacksg 42", "23634", "Hollviken", :SE], result
     end
   end
 
