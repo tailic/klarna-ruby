@@ -11,7 +11,7 @@ require 'klarna'
 
 Dir[File.join(File.dirname(__FILE__), *%w[support ** *.rb]).to_s].each { |f| require f }
 
-MiniTest::Unit::TestCase.class_eval do
+Minitest::Test.class_eval do
   include Klarna::AssertionsHelper
 end
 
