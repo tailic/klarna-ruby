@@ -15,6 +15,13 @@ describe Klarna::API::Methods::Reservation do
     expose_protected_methods_in @client.class
   end
 
+  # Spec: http://integration.klarna.com/en/api/advanced-integration/functions/checkorderstatus
+  describe '#check_order_status' do
+    it 'should be defined' do
+      assert_respond_to @client, :check_order_status
+    end
+  end
+
   # Spec: http://integration.klarna.com/en/api/advanced-integration/functions/reserveamount
   describe '#reserve_amount' do
     it 'should be defined' do
