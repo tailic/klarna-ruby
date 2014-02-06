@@ -45,7 +45,9 @@ module Klarna
           #   xmlrpc_params.push params[attr] if params[attr]
           # end
 
-          self.call(:activate, *xmlrpc_params)
+          self.call(:activate, *xmlrpc_params).tap do |result|
+            result = result.first
+          end
         end
 
         # Reserve a purchase amount for a specific customer. The reservation is valid, by default, for 7 days.
