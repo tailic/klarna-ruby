@@ -157,11 +157,10 @@ module Klarna
         string = args.join(':')
         iso_value = self.encode(string)
 
+        puts "Digest: #{iso_value}"
 
-        hex_md5_digest = [*::Digest::MD5.hexdigest(iso_value)].pack('H*')
-        base64_digest = ::XMLRPC::Base64.encode(hex_md5_digest).strip
-        hex_sha512_digest = [*Digest::SHA512.hexdigest(iso_value)].pack('H*')
-        base64_digest = ::XMLRPC::Base64.encode(hex_sha512_digest).strip
+        digest = Digest::SHA512.hexdigest(iso_value).split.pack('H*')
+        ::XMLRPC::Base64.encode(digest).strip
       end
 
       def encode(string, from_encoding = 'utf-8')

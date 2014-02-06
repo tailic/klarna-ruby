@@ -19,6 +19,35 @@ module Klarna
           self.call(:check_order_status, *xmlrpc_params)
         end
 
+        # To check an invoice or a reservation order status if it is ok, pending or denied.
+        #
+        def activate(params)
+
+          signature = [
+            ::Klarna::API::PROTOCOL_VERSION.clone.gsub('.',':'),
+            ::XMLRPC::Client::USER_AGENT,
+            store_id,
+            params[:rno],
+            store_secret
+          ]
+
+          xmlrpc_params = [
+            ::Klarna::API::PROTOCOL_VERSION,
+            ::XMLRPC::Client::USER_AGENT,
+            store_id,
+            ::Klarna::API.digest(signature),
+            params[:rno],
+            {}
+          ]
+
+          # %w{orderid1 orderid2 flags reference reference_code ocr bclass cust_no artnos artno qty}.each do |attr|
+          #   attr = attr.to_sym
+          #   xmlrpc_params.push params[attr] if params[attr]
+          # end
+
+          self.call(:activate, *xmlrpc_params)
+        end
+
         # Reserve a purchase amount for a specific customer. The reservation is valid, by default, for 7 days.
         # Pass cellphone no. instead of Pno for SMS payments.
         #

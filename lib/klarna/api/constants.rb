@@ -9,9 +9,9 @@ module Klarna
       # -----------------------------------------------------------------------
       END_POINT = {
         :test => {
-          :protocol => 'http',
-          :host => 'payment-beta.klarna.com',
-          :port => 80
+          :protocol => 'https',
+          :host => 'payment.testdrive.klarna.com',
+          :port => 443
         },
         :production => {
           :protocol => 'https',
