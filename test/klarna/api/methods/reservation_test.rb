@@ -22,6 +22,13 @@ describe Klarna::API::Methods::Reservation do
     end
   end
 
+  # Spec: http://integration.klarna.com/en/api/advanced-integration/functions/activate
+  describe '#activate' do
+    it 'should be defined' do
+      assert_respond_to @client, :activate
+    end
+  end
+
   # Spec: http://integration.klarna.com/en/api/advanced-integration/functions/reserveamount
   describe '#reserve_amount' do
     it 'should be defined' do
