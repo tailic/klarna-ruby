@@ -50,15 +50,18 @@ module Klarna
         end
 
         # Create addresses (i.e. the +address+ argument to the +add_transaction+ method).
-        #
-        def make_address(co_address, street_address, zip, city, country, phone, cell_phone, email,
+        # TODO User params hash instead of long argument list?
+        def make_address(firstname, lastname, co_address, street_address, zip, city, country, phone, cell_phone, email,
                           house_number = nil, house_extension = nil)
           country = ::Klarna::API.id_for(:country, country)
           phone = phone.to_s.gsub(/[\W\s\t]/, '')
           cell_phone = cell_phone.to_s.gsub(/[\W\s\t]/, '')
           {
+            :fname => firstname,
+            :lname => lastname,
             :careof  => co_address,
             :street  => street_address,
+            :house_number => house_number.to_s, #AT/DE/NL only
             :postno  => zip,
             :city    => city,
             :country => country,

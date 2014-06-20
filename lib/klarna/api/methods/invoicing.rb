@@ -28,7 +28,7 @@ module Klarna
           reference = '' #TODO
           reference_code = '' #TODO
           order_id2 = '' #TODO
-          gender = '' #TODO
+          gender = 0 #TODO add to funciton params
           ship_info = {delay_adjust: 1}
           travel_info = ''
           income_info = ''
@@ -40,7 +40,7 @@ module Klarna
             ::Klarna::API::PROTOCOL_VERSION,
             ::XMLRPC::Client::USER_AGENT,
             pno,
-            gender.to_s,
+            gender,
             reference,
             reference_code,
             order_id,

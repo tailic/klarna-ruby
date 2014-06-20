@@ -77,16 +77,19 @@ describe Klarna::API::Methods::Standard do
     describe "SE" do
       it 'should generate an valid address array' do
         assert_equal ({
-            'careof'  => "c/o Lidin",
-            'street'  => "Junibackg. 42",
-            'postno'  => "23634",
-            'city'    => "Hollviken",
-            'country' => 209,
-            'telno'   => "0765260000",
-            'cellno'  => "0765260000",
-            'email'   => "karl.lidin@klarna.com"
+            'fname'        => "Testperson-se",
+            'lname'        => "Approved",
+            'careof'       => "",
+            'street'       => "Stårgatan 12",
+            'house_number' => "",
+            'postno'       => "12345",
+            'city'         => "Ankeborg",
+            'country'      => 209,
+            'telno'        => "0765260000",
+            'cellno'       => "0765260000",
+            'email'        => "youremail@email.com"
           }),
-          @klarna.make_address("c/o Lidin", "Junibackg. 42", "23634", "Hollviken", :SE, "076 526 00 00", "076 526 00 00", "karl.lidin@klarna.com")
+          @klarna.make_address("Testperson-se", "Approved", "", "Stårgatan 12", "12345", "Ankeborg", :SE, "076 526 00 00", "076 526 00 00", "youremail@email.com")
       end
 
       # TODO
@@ -126,6 +129,31 @@ describe Klarna::API::Methods::Standard do
         describe 'email' do
           # it 'should be a valid email (string)'
         end
+      end
+    end
+
+    describe "DE" do
+      it 'should generate an valid address array' do
+        assert_equal ({
+            'fname'        => "Testperson-de",
+            'lname'        => "Approved",
+            'careof'       => "",
+            'street'       => "Hellersbergstraße",
+            'house_number' => "14",
+            'postno'       => "41460",
+            'city'         => "Neuss",
+            'country'      => 81,
+            'telno'        => "01522113356",
+            'cellno'       => "01522113356",
+            'email'        => "youremail@email.com"
+
+        }),
+        @klarna.make_address("Testperson-de", "Approved", "", "Hellersbergstraße", "41460", "Neuss", :DE, "015 22 11 33 56", "01522113356", "youremail@email.com", "14")
+      end
+
+      # TODO
+      describe 'argument constraints: raise argument error if not true (no API-call)' do
+
       end
     end
   end
