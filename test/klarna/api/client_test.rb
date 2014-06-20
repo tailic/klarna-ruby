@@ -104,8 +104,8 @@ describe Klarna::API::Client do
               @client.mode = :test
             end
 
-            it 'should be: http' do
-              assert_equal 'http', @client.protocol
+            it 'should be: https' do
+              assert_equal 'https', @client.protocol
             end
           end
 
@@ -156,8 +156,8 @@ describe Klarna::API::Client do
               @client.mode = :test
             end
 
-            it 'should be: 80' do
-              assert_equal 80, @client.port
+            it 'should be: 443' do
+              assert_equal 443, @client.port
             end
           end
 
@@ -178,8 +178,8 @@ describe Klarna::API::Client do
               @client.mode = :test
             end
 
-            it 'should be: http://payment.testdrive.klarna.com:80' do
-              assert_equal 'http://payment.testdrive.klarna.com:80', @client.endpoint_uri
+            it 'should be: https://payment.testdrive.klarna.com:443' do
+              assert_equal 'https://payment.testdrive.klarna.com:443', @client.endpoint_uri
             end
           end
 
