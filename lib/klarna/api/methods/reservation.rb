@@ -85,7 +85,7 @@ module Klarna
             params[:session_id] || [],
             params[:extra_info] || []
           ]
-          
+
           self.call(:reserve_amount, *xmlrpc_params).tap do |result|
             result = result.first
           end
