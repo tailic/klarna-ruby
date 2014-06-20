@@ -13,7 +13,7 @@ module Klarna
         # Create an invoice.
         #
         def add_invoice(store_user_id, order_id, articles, shipping_fee,
-                            handling_fee, shipment_type, pno, first_name, last_name, address, client_ip,
+                            handling_fee, shipment_type, pno, first_name, last_name, address_delivery, address_billing, client_ip,
                             currency, country, language, pno_encoding, pclass = nil, annual_salary = nil,
                             password = nil, ready_date = nil, comment = nil, rand_string = nil, new_password = nil, flags = nil)
           shipment_type = ::Klarna::API.id_for(:shipment_type, shipment_type)
@@ -24,33 +24,58 @@ module Klarna
           pclass = pclass ? ::Klarna::API.id_for(:pclass, pclass) : -1
           flags = ::Klarna::API.parse_flags(:INVOICE, flags)
           articles = Array.wrap(articles).compact
+          #TODO get constant for gender ( gender = ::Klarna::API.id_for(:gender, gender) )
+          reference = '' #TODO
+          reference_code = '' #TODO
+          order_id2 = '' #TODO
+          gender = '' #TODO
+          ship_info = {delay_adjust: 1}
+          travel_info = ''
+          income_info = ''
+          bank_info = ''
+          store_user_id = ''
+          extra_info = ''
 
           params = [
-            self.store_id,
-            store_user_id,
-            self.digest(articles.collect { |g| g[:goods][:title] }, :store_id => false),
-            order_id,
-            articles,
-            shipping_fee,
-            shipment_type,
-            handling_fee,
+            ::Klarna::API::PROTOCOL_VERSION,
+            ::XMLRPC::Client::USER_AGENT,
             pno,
-            first_name,
-            last_name,
-            address,
-            password.to_s,
+            gender.to_s,
+            reference,
+            reference_code,
+            order_id,
+            order_id2,
+            address_delivery,
+            address_billing,
             client_ip.to_s,
-            new_password.to_s,
             flags.to_i,
-            comment.to_s,
-            ready_date.to_s,
-            rand_string.to_s,
             currency,
             country,
             language,
+            self.store_id,
+            self.digest(articles.collect { |g| g[:goods][:title] }, :store_id => false),
             pno_encoding,
             pclass,
-            annual_salary.to_i
+            articles,
+            comment.to_s,
+            ship_info,
+            travel_info,
+            income_info,
+            bank_info,
+            store_user_id,
+            extra_info
+
+
+            #shipping_fee, #TODO deprecated?
+            #shipment_type, #TODO deprecated?
+            #handling_fee, #TODO deprecated?
+            #first_name, #TODO deprecated? part of address
+            #last_name, #TODO deprecated? part of address
+            #password.to_s, #TODO deprecated?
+            #new_password.to_s, #TODO deprecated?
+            #ready_date.to_s, #TODO deprecated?
+            #rand_string.to_s, #TODO deprecated?
+            #annual_salary.to_i #TODO deprecated?
           ]
 
           self.call(:add_invoice, *params)
@@ -72,8 +97,12 @@ module Klarna
           # TODO: Parse/Validate invoice_no as :integer
           # TODO: Parse/Valdiate articles as array of articles
           articles = Array.wrap(articles).compact
+          pclass = -1 #TODO ??
+          shipment_info = 0 #TODO ??
 
           params = [
+            ::Klarna::API::PROTOCOL_VERSION,
+            ::XMLRPC::Client::USER_AGENT,
             self.store_id,
             invoice_no
           ]
@@ -82,9 +111,13 @@ module Klarna
           if articles.present?
             params << articles
             params << self.digest(invoice_no, articles.collect { |a| [a[:goods][:artno], a[:qty]].join(':') }.join(':'))
+            params << pclass
+            params << shipment_info
             method = :activate_part
           else
             params << self.digest(invoice_no)
+            params << pclass
+            params << shipment_info
             method = :activate_invoice
           end
 
@@ -98,6 +131,8 @@ module Klarna
           # TODO: Parse/Validate invoice_no as :integer
 
           params = [
+            ::Klarna::API::PROTOCOL_VERSION,
+            ::XMLRPC::Client::USER_AGENT,
             self.store_id,
             invoice_no,
             self.digest(invoice_no)
@@ -110,6 +145,8 @@ module Klarna
         #
         def return_amount(invoice_no, amount, vat)
           params = [
+            ::Klarna::API::PROTOCOL_VERSION,
+            ::XMLRPC::Client::USER_AGENT,
             self.store_id,
             invoice_no,
             amount,
@@ -124,7 +161,10 @@ module Klarna
         def credit_invoice(invoice_no, credit_id, articles = nil)
           articles = Array.wrap(articles).compact
 
+
           params = [
+            ::Klarna::API::PROTOCOL_VERSION,
+            ::XMLRPC::Client::USER_AGENT,
             self.store_id,
             invoice_no,
             credit_id,
@@ -152,6 +192,8 @@ module Klarna
           # TODO: Parse/Validate invoice_no as integer
 
           params = [
+            ::Klarna::API::PROTOCOL_VERSION,
+            ::XMLRPC::Client::USER_AGENT,
             self.store_id,
             invoice_no,
             self.digest(invoice_no)
@@ -166,6 +208,8 @@ module Klarna
           # TODO: Parse/Validate invoice_no as integer
 
           params = [
+            ::Klarna::API::PROTOCOL_VERSION,
+            ::XMLRPC::Client::USER_AGENT,
             self.store_id,
             invoice_no,
             self.digest(invoice_no)
@@ -191,6 +235,8 @@ module Klarna
           # TODO: Parse/Validate new_quantity as integer
 
           params = [
+            ::Klarna::API::PROTOCOL_VERSION,
+            ::XMLRPC::Client::USER_AGENT,
             self.store_id,
             self.digest(invoice_no, article_no, new_quantity, :store_id => false),
             invoice_no,
@@ -209,6 +255,8 @@ module Klarna
           # TODO: Parse/Validate new_amount as integer (or parse from decimal)
 
           params = [
+            ::Klarna::API::PROTOCOL_VERSION,
+            ::XMLRPC::Client::USER_AGENT,
             self.store_id,
             self.digest(invoice_no, charge_type, new_amount),
             invoice_no,
@@ -226,6 +274,8 @@ module Klarna
           # TODO: Parse/Validate new_order_no as integer
 
           params = [
+            ::Klarna::API::PROTOCOL_VERSION,
+            ::XMLRPC::Client::USER_AGENT,
             self.store_id,
             invoice_no,
             self.digest(invoice_no, new_order_no),
@@ -241,6 +291,8 @@ module Klarna
           # TODO: Parse/Validate invoice_no as integer
 
           params = [
+            ::Klarna::API::PROTOCOL_VERSION,
+            ::XMLRPC::Client::USER_AGENT,
             self.store_id,
             invoice_no,
             self.digest(invoice_no)
@@ -265,6 +317,8 @@ module Klarna
             end
 
           params = [
+            ::Klarna::API::PROTOCOL_VERSION,
+            ::XMLRPC::Client::USER_AGENT,
             self.store_id,
             invoice_no
           ]
@@ -289,6 +343,8 @@ module Klarna
           # TODO: Parse/Validate invoice_no as numeric value (string)
 
           params = [
+            ::Klarna::API::PROTOCOL_VERSION,
+            ::XMLRPC::Client::USER_AGENT,
             invoice_no,
             self.store_id,
             self.digest(invoice_no)

@@ -130,8 +130,8 @@ describe Klarna::API::Client do
               @client.mode = :test
             end
 
-            it 'should be: beta-test.klarna.com' do
-              assert_equal @client.host, 'payment-beta.klarna.com'
+            it 'should be: payment.testdrive.klarna.com' do
+              assert_equal @client.host, 'payment.testdrive.klarna.com'
             end
           end
 
@@ -178,8 +178,8 @@ describe Klarna::API::Client do
               @client.mode = :test
             end
 
-            it 'should be: http://beta-test.klarna.com:80' do
-              assert_equal 'http://payment-beta.klarna.com:80', @client.endpoint_uri
+            it 'should be: http://payment.testdrive.klarna.com:80' do
+              assert_equal 'http://payment.testdrive.klarna.com:80', @client.endpoint_uri
             end
           end
 

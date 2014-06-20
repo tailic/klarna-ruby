@@ -23,10 +23,10 @@ describe Klarna::API::Methods::Invoicing do
     @order_items << @klarna.make_goods(7, 'ABC3', "T-shirt 3", 17.00 * 100, 25, 0, :INC_VAT => true)
     @order_items_total = (1 * (1.00 * 100) + 3 * (7.00 * 100) + 7 * (17.00 * 100)).to_i
 
-    @address_SE = @klarna.make_address("c/o Lidin", "Junibackg. 42", "23634", "Höllviken", :SE, "076 526 00 00", "076 526 00 00", "karl.lidin@klarna.com")
+    @address_SE = @klarna.make_address("", "Stårgatan 1", "12345", "Ankeborg", :SE, "076 526 00 00", "0765260000", "youremail@email.com")
 
     @valid_invoice_args_SE =
-      ['USER-4304158399', 'ORDER-1', @order_items, 0, 0, :NORMAL, '4304158399', 'Karl', 'Lidin', @address_SE, '85.230.98.196', :SEK, :SE, :SV, :SE, nil, nil, nil, nil, nil, nil, nil, 2]
+      ['USER-4103219202', 'ORDER-1', @order_items, 0, 0, :NORMAL, '4103219202', 'Testperson-se', 'Approved', @address_SE, @address_SE, '85.230.98.196', :SEK, :SE, :SV, :SE, nil, nil, nil, nil, nil, nil, nil, 2]
   end
 
   # Spec: http://integration.klarna.com/en/api/standard-integration/functions/addtransaction
@@ -38,16 +38,16 @@ describe Klarna::API::Methods::Invoicing do
     describe "SE" do
       it 'should create order successfully with valid arguments' do
         invoice_no = @klarna.add_transaction(
-          'USER-4304158399', 'ORDER-1', @order_items, 0, 0, ::Klarna::API::SHIPMENT_TYPES[:NORMAL], '4304158399', 'Karl', 'Lidin', @address_SE, '85.230.98.196', ::Klarna::API::CURRENCIES[:SEK], ::Klarna::API::COUNTRIES[:SE], ::Klarna::API::LANGUAGES[:SV], ::Klarna::API::PNO_FORMATS[:SE])
+          'USER-4103219202', 'ORDER-1', @order_items, 0, 0, ::Klarna::API::SHIPMENT_TYPES[:NORMAL], '4103219202', 'Testperson-se', 'Approved', @address_SE, @address_SE, '85.230.98.196', ::Klarna::API::CURRENCIES[:SEK], ::Klarna::API::COUNTRIES[:SE], ::Klarna::API::LANGUAGES[:SV], ::Klarna::API::PNO_FORMATS[:SE])
 
-        assert_match /^\d+$/, invoice_no
+        assert_match /^\d+$/, invoice_no[0]
       end
 
       it 'should accept shortcut arguments for: shipment_type, currency, country, language, pno_encoding' do
         invoice_no = @klarna.add_invoice(
-          'USER-4304158399', 'ORDER-1', @order_items, 0, 0, :NORMAL, '4304158399', 'Karl', 'Lidin', @address_SE, '85.230.98.196', :SEK, :SE, :SV, :SE)
+          'USER-4103219202', 'ORDER-1', @order_items, 0, 0, :NORMAL, '4103219202', 'Testperson-se', 'Approved', @address_SE, @address_SE, '85.230.98.196', :SEK, :SE, :SV, :SE)
 
-        assert_match /^\d+$/, invoice_no
+        assert_match /^\d+$/, invoice_no[0]
       end
     end
   end
@@ -110,7 +110,7 @@ describe Klarna::API::Methods::Invoicing do
     it 'should successfully delete an existing invoice' do
       invoice_no = @klarna.add_invoice(*@valid_invoice_args_SE)
 
-      assert_equal 'ok', @klarna.delete_invoice(invoice_no)
+      assert_equal 'ok', @klarna.delete_invoice(invoice_no[0])
     end
   end
 
@@ -236,7 +236,7 @@ describe Klarna::API::Methods::Invoicing do
     it 'should raise error for snail-mail request of an existing but un-activated invoice' do
       assert_raises ::Klarna::API::Errors::KlarnaServiceError do
         invoice_no = @klarna.add_invoice(*@valid_invoice_args_SE)
-        @klarna.send_invoice(invoice_no)
+        @klarna.send_invoice(invoice_no[0])
       end
     end
 
@@ -286,7 +286,7 @@ describe Klarna::API::Methods::Invoicing do
     it 'should successfully update goods quantity for an existing invoice and valid article-no' do
       invoice_no = @klarna.add_invoice(*@valid_invoice_args_SE)
 
-      assert_equal invoice_no, @klarna.update_goods_quantity(invoice_no, 'ABC1', 10)
+      assert_equal invoice_no[0], @klarna.update_goods_quantity(invoice_no[0], 'ABC1', 10)
     end
   end
 
@@ -344,8 +344,8 @@ describe Klarna::API::Methods::Invoicing do
 
     it 'should successfully return the address for an existing invoice' do
       invoice_no = @klarna.add_invoice(*@valid_invoice_args_SE)
-
-      assert_equal ["Karl", "Lidin", "Junibacksg 42", "23634", "Hollviken", 'SE'], @klarna.invoice_address(invoice_no)
+      #TODO Klarna does not return first- and lastname here!?
+      assert_equal ['', '', 'Stårgatan 1', '12345', 'Ankeborg', 'SE'], @klarna.invoice_address(invoice_no[0])
     end
   end
 
@@ -367,7 +367,7 @@ describe Klarna::API::Methods::Invoicing do
       it 'should successfully return the invoice amount for an existing invoice' do
         invoice_no = @klarna.add_invoice(*@valid_invoice_args_SE)
 
-        assert_equal @order_items_total, @klarna.invoice_amount(invoice_no)
+        assert_equal @order_items_total, @klarna.invoice_amount(invoice_no[0])
       end
     end
 
@@ -383,7 +383,7 @@ describe Klarna::API::Methods::Invoicing do
         invoice_no = @klarna.add_invoice(*@valid_invoice_args_SE)
         articles = [@order_items.last]
 
-        assert_equal 7*(17.00 * 100), @klarna.invoice_amount(invoice_no, articles)
+        assert_equal 7*(17.00 * 100), @klarna.invoice_amount(invoice_no[0], articles)
       end
     end
   end
@@ -402,7 +402,7 @@ describe Klarna::API::Methods::Invoicing do
     it 'should be unpaid for an existing but un-activated invoice' do
       invoice_no = @klarna.add_invoice(*@valid_invoice_args_SE)
 
-      assert_equal false, @klarna.invoice_paid?(invoice_no)
+      assert_equal false, @klarna.invoice_paid?(invoice_no[0])
     end
   end
 

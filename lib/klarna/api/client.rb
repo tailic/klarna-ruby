@@ -56,7 +56,7 @@ module Klarna
       def call(service_method, *args)
         args.collect! { |arg| arg.is_a?(String) ? ::Klarna::API.decode(arg) : arg }
         ::Klarna.log "Method: #{service_method}"
-        ::Klarna.log "Params: %s" % args.inspect #self.add_meta_params(*args).inspect
+        ::Klarna.log "Params: %s" % args.inspect#self.add_meta_params(*args).inspect
 
         self.last_request_headers = http_header_extra
 
@@ -98,7 +98,7 @@ module Klarna
         #
         def content_type_headers
           {
-            :'Accept-Encoding' => 'deflate,gzclient_ip',
+            :'Accept-Encoding' => 'gzip,deflate',
             :'Content-Type' => "text/xml;charset=#{::Klarna::API::PROTOCOL_ENCODING}",
             :'Accept-Charset' => 'iso-8859-1', # REVISIT: 'UTF-8,ISO-8859-1,US-ASCII',
             :'Connection' => 'close',
