@@ -12,6 +12,8 @@ module Klarna
           xmlrpc_params = [
             ::Klarna::API::PROTOCOL_VERSION,
             ::XMLRPC::Client::USER_AGENT,
+            store_id,
+            self.digest(params[:id]),
             params[:id],
             params[:type]
           ]

@@ -33,14 +33,14 @@ describe Klarna::API::Methods::Reservation do
     @address_order_denied_SE = @client.make_address(base_address_se.merge denied_order)
 
     @address_approved_DE = @client.make_address(base_address_de)
-    @address_denied_DE   = @client.make_address(base_address_se.merge denied_address)
+    @address_denied_DE   = @client.make_address(base_address_de.merge denied_address)
     @address_order_pending_DE   = @client.make_address(base_address_de.merge pending_order)
-    @address_order_denied_DE   = @client.make_address(base_address_se.merge denied_order)
+    @address_order_denied_DE   = @client.make_address(base_address_de.merge denied_order)
 
 
-    @approved_reservation_DE = {pno: "07071960", amount: @order_items_total, order_id: '1234567', delivery_address: @address_approved_DE, billing_address: @address_approved_DE, currency: :EUR, country: :DE, language: :DE, goods_list: @order_items, pno_encoding: 6 }
-    @pending_reservation_DE = {pno: "07071960", amount: @order_items_total, order_id: '1234567', delivery_address: @address_order_pending_DE, billing_address: @address_order_pending_DE, currency: :EUR, country: :DE, language: :DE, goods_list: @order_items, pno_encoding: 6 }
-    @denied_reservation_DE = {pno: "07071960", amount: @order_items_total, order_id: '1234567', delivery_address: @address_order_denied_DE, billing_address: @address_order_denied_DE, currency: :EUR, country: :DE, language: :DE, goods_list: @order_items, pno_encoding: 6 }
+    @approved_reservation_DE = {pno: '07071960', amount: @order_items_total, order_id: '1234567', delivery_address: @address_approved_DE, billing_address: @address_approved_DE, currency: :EUR, country: :DE, language: :DE, goods_list: @order_items, pno_encoding: 6 }
+    @pending_reservation_DE = {pno: '07071960', amount: @order_items_total, order_id: '1234567', delivery_address: @address_order_pending_DE, billing_address: @address_order_pending_DE, currency: :EUR, country: :DE, language: :DE, goods_list: @order_items, pno_encoding: 6 }
+    @denied_reservation_DE = {pno: '07071960', amount: @order_items_total, order_id: '1234567', delivery_address: @address_order_denied_DE, billing_address: @address_order_denied_DE, currency: :EUR, country: :DE, language: :DE, goods_list: @order_items, pno_encoding: 6 }
 
   end
 
@@ -49,6 +49,27 @@ describe Klarna::API::Methods::Reservation do
     it 'should be defined' do
       assert_respond_to @client, :check_order_status
     end
+
+    it 'should return status ok for an accepted order' do
+      reservation_no, invoice_status = @client.reserve_amount(@approved_reservation_DE)
+      status = @client.check_order_status id: reservation_no, type: 0
+      assert_equal Klarna::API::ORDER_STATUS[:ACCEPTED] , status
+    end
+
+    it 'should return status pending for a pending order' do
+      reservation_no, invoice_status = @client.reserve_amount(@pending_reservation_DE)
+      status = @client.check_order_status id: reservation_no, type: 0
+      assert_equal Klarna::API::ORDER_STATUS[:PENDING] , status
+    end
+
+    it 'should return status pending for a denied order' do
+      reservation_no, invoice_status = @client.reserve_amount(@denied_reservation_DE)
+      puts invoice_status
+      status = @client.check_order_status id: reservation_no, type: 0
+      #TODO When (or) will this status change to denied!?
+      assert_equal Klarna::API::ORDER_STATUS[:PENDING] , status
+    end
+
   end
 
   # Spec: http://integration.klarna.com/en/api/advanced-integration/functions/activate
@@ -79,9 +100,9 @@ describe Klarna::API::Methods::Reservation do
       end
 
       it 'should raise error for when trying to create a reservation with a denied address' do
-        assert_raises ::Klarna::API::Errors::KlarnaServiceError do
-          @client.reserve_amount(@denied_reservation_DE)
-        end
+        reservation_no, invoice_status = @client.reserve_amount(@pending_reservation_DE)
+        assert_match /^\d+$/, reservation_no.to_s
+        assert_match '2', invoice_status.to_s
       end
     end
 
