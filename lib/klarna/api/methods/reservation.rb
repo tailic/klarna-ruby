@@ -22,26 +22,25 @@ module Klarna
         end
 
         # Activates a reservation matching the given reservation number.
-        #
+        # TODO optional_info
         def activate(params)
-
           signature = [
               ::Klarna::API::PROTOCOL_VERSION.clone.gsub('.',':'),
               ::XMLRPC::Client::USER_AGENT,
               store_id,
-              params[:rno],
+              params[:reservation_no],
               store_secret
           ]
-
           xmlrpc_params = [
               ::Klarna::API::PROTOCOL_VERSION,
               ::XMLRPC::Client::USER_AGENT,
               store_id,
               ::Klarna::API.digest(signature),
-              params[:rno],
+              params[:reservation_no],
               {}
           ]
 
+          #TODO optional infos see below
           # %w{orderid1 orderid2 flags reference reference_code ocr bclass cust_no artnos artno qty}.each do |attr|
           #   attr = attr.to_sym
           #   xmlrpc_params.push params[attr] if params[attr]
@@ -56,7 +55,6 @@ module Klarna
         # Pass cellphone no. instead of Pno for SMS payments.
         #
         def reserve_amount(params)
-          
           xmlrpc_params = [
             ::Klarna::API::PROTOCOL_VERSION,
             ::XMLRPC::Client::USER_AGENT,
@@ -94,9 +92,8 @@ module Klarna
         end
 
         # Activate purchases which have been previously reserved with the reserve_amount function.
-        #
+        # TODO Deprecated function? there is already an activate above
         def activate_reservation(params)
-                                   
           xmlrpc_params = [
             ::Klarna::API::PROTOCOL_VERSION,
             ::XMLRPC::Client::USER_AGENT,
@@ -135,13 +132,13 @@ module Klarna
 
         # Cancel a reservation.
         #
-        def cancel_reservation(params)
+        def cancel_reservation(reservation_id)
           xmlrpc_params = [
             ::Klarna::API::PROTOCOL_VERSION,
             ::XMLRPC::Client::USER_AGENT,
-            params[:reservation_id],
+            reservation_id,
             self.store_id,
-            self.digest(params[:reservation_id])
+            self.digest(reservation_id)
           ]
           self.call(:cancel_reservation, *xmlrpc_params)
         end
@@ -155,8 +152,8 @@ module Klarna
             ::XMLRPC::Client::USER_AGENT,
             params[:reservation_id],
             params[:split_amount],
-            params[:order_id_1],
-            params[:order_id_2],
+            params[:order_id_1] || '',
+            params[:order_id_2] || '',
             params[:flags].to_i || 0,
             self.store_id,
             self.digest(params[:reservation_id], params[:split_amount])
@@ -169,7 +166,6 @@ module Klarna
         # Change a reservation.
         #
         def change_reservation(params)
-          
           xmlrpc_params = [
             ::Klarna::API::PROTOCOL_VERSION,
             ::XMLRPC::Client::USER_AGENT,

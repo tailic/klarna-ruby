@@ -50,7 +50,7 @@ module Klarna
         end
 
         # Create addresses (i.e. the +address+ argument to the +add_transaction+ method).
-        # TODO Check if neccesary params are set
+        # TODO Check if neccesary params are set / validate
         def make_address(params = {})
           country = ::Klarna::API.id_for(:country, params[:country])
           phone = params[:telno].to_s.gsub(/[\W\s\t]/, '')
