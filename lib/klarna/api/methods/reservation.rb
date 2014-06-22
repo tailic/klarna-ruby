@@ -19,7 +19,7 @@ module Klarna
           self.call(:check_order_status, *xmlrpc_params)
         end
 
-        # To check an invoice or a reservation order status if it is ok, pending or denied.
+        # Activates a reservation matching the given reservation number.
         #
         def activate(params)
 

@@ -77,19 +77,28 @@ describe Klarna::API::Methods::Standard do
     describe "SE" do
       it 'should generate an valid address array' do
         assert_equal ({
-            'fname'        => "Testperson-se",
-            'lname'        => "Approved",
-            'careof'       => "",
-            'street'       => "Stårgatan 12",
-            'house_number' => "",
-            'postno'       => "12345",
-            'city'         => "Ankeborg",
-            'country'      => 209,
-            'telno'        => "0765260000",
-            'cellno'       => "0765260000",
-            'email'        => "youremail@email.com"
-          }),
-          @klarna.make_address("Testperson-se", "Approved", "", "Stårgatan 12", "12345", "Ankeborg", :SE, "076 526 00 00", "076 526 00 00", "youremail@email.com")
+            :fname        => 'Testperson-se',
+            :lname        => 'Approved',
+            :careof       => '',
+            :street       => 'Stårgatan 12',
+            :house_number => '',
+            :postno       => '12345',
+            :city         => 'Ankeborg',
+            :country      => 209,
+            :telno        => '0765260000',
+            :cellno       => '0765260000',
+            :email        => 'youremail@email.com'
+          }.with_indifferent_access),
+          @klarna.make_address({:fname => 'Testperson-se',
+                                :lname => 'Approved',
+                                :careof => '',
+                                :street => 'Stårgatan 12',
+                                :postno => '12345',
+                                :city => 'Ankeborg',
+                                :country => :SE,
+                                :telno => '076 526 00 00',
+                                :cellno => '076 526 00 00',
+                                :email => 'youremail@email.com'})
       end
 
       # TODO
@@ -132,23 +141,33 @@ describe Klarna::API::Methods::Standard do
       end
     end
 
-    describe "DE" do
+    describe 'DE' do
       it 'should generate an valid address array' do
         assert_equal ({
-            'fname'        => "Testperson-de",
-            'lname'        => "Approved",
-            'careof'       => "",
-            'street'       => "Hellersbergstraße",
-            'house_number' => "14",
-            'postno'       => "41460",
-            'city'         => "Neuss",
-            'country'      => 81,
-            'telno'        => "01522113356",
-            'cellno'       => "01522113356",
-            'email'        => "youremail@email.com"
+            :fname        => 'Testperson-de',
+            :lname        => 'Approved',
+            :careof       => '',
+            :street       => 'Hellersbergstraße',
+            :house_number => '14',
+            :postno       => '41460',
+            :city         => 'Neuss',
+            :country      => 81,
+            :telno        => '01522113356',
+            :cellno       => '01522113356',
+            :email        => 'youremail@email.com'
 
-        }),
-        @klarna.make_address("Testperson-de", "Approved", "", "Hellersbergstraße", "41460", "Neuss", :DE, "015 22 11 33 56", "01522113356", "youremail@email.com", "14")
+        }.with_indifferent_access),
+        @klarna.make_address({:fname => 'Testperson-de',
+                              :lname => 'Approved',
+                              :careof => '',
+                              :street => 'Hellersbergstraße',
+                              :postno => '41460',
+                              :city => 'Neuss',
+                              :country => :DE,
+                              :telno => '015 22 11 33 56',
+                              :cellno => '01522113356',
+                              :email => 'youremail@email.com',
+                              :house_number => '14'})
       end
 
       # TODO

@@ -18,13 +18,34 @@ describe Klarna::API::Methods::Invoicing do
     expose_protected_methods_in @klarna.class
 
     @order_items = []
-    @order_items << @klarna.make_goods(1, 'ABC1', "T-shirt 1", 1.00 * 100, 25, 0, :INC_VAT => true)
-    @order_items << @klarna.make_goods(3, 'ABC2', "T-shirt 2", 7.00 * 100, 25, 0, :INC_VAT => true)
-    @order_items << @klarna.make_goods(7, 'ABC3', "T-shirt 3", 17.00 * 100, 25, 0, :INC_VAT => true)
+    @order_items << @klarna.make_goods(1, 'ABC1', 'T-shirt 1', 1.00 * 100, 25, 0, :INC_VAT => true)
+    @order_items << @klarna.make_goods(3, 'ABC2', 'T-shirt 2', 7.00 * 100, 25, 0, :INC_VAT => true)
+    @order_items << @klarna.make_goods(7, 'ABC3', 'T-shirt 3', 17.00 * 100, 25, 0, :INC_VAT => true)
     @order_items_total = (1 * (1.00 * 100) + 3 * (7.00 * 100) + 7 * (17.00 * 100)).to_i
 
-    @address_SE = @klarna.make_address("Testperson-se", "Approved","", "Stårgatan 1", "12345", "Ankeborg", :SE, "076 526 00 00", "0765260000", "youremail@email.com")
-    @address_DE = @klarna.make_address("Testperson-de", "Approved", "", "Hellersbergstraße", "41460", "Neuss", :DE, "01522113356", "01522113356", "youremail@email.com", "14")
+
+    @address_SE = @klarna.make_address({:fname => 'Testperson-se',
+                                        :lname => 'Approved',
+                                        :careof => '',
+                                        :street => 'Stårgatan 1',
+                                        :postno => '12345',
+                                        :city => 'Ankeborg',
+                                        :country => :SE,
+                                        :telno => '076 526 00 00',
+                                        :cellno => '076 526 00 00',
+                                        :email => 'youremail@email.com'})
+
+    @address_DE = @klarna.make_address({:fname => 'Testperson-de',
+                                        :lname => 'Approved',
+                                        :careof => '',
+                                        :street => 'Hellersbergstraße',
+                                        :postno => '41460',
+                                        :city => 'Neuss',
+                                        :country => :DE,
+                                        :telno => '015 22 11 33 56',
+                                        :cellno => '01522113356',
+                                        :email => 'youremail@email.com',
+                                        :house_number => '14'})
 
     @valid_invoice_args_SE = ['USER-4103219202', 'ORDER-1', @order_items, 0, 0, :NORMAL, '4103219202', 'Testperson-se', 'Approved', @address_SE, @address_SE, '85.230.98.196', :SEK, :SE, :SV, :SE, nil, nil, nil, nil, nil, nil, nil, 2]
     @valid_invoice_args_DE = ['USER-07071960', 'ORDER-1', @order_items, 0, 0, :NORMAL, '07071960', 'Testperson-de', 'Approved', @address_DE, @address_DE, '85.230.98.196', :EUR, :DE, :DE, :DE, nil, nil, nil, nil, nil, nil, nil, 2]

@@ -50,24 +50,23 @@ module Klarna
         end
 
         # Create addresses (i.e. the +address+ argument to the +add_transaction+ method).
-        # TODO User params hash instead of long argument list?
-        def make_address(firstname, lastname, co_address, street_address, zip, city, country, phone, cell_phone, email,
-                          house_number = nil, house_extension = nil)
-          country = ::Klarna::API.id_for(:country, country)
-          phone = phone.to_s.gsub(/[\W\s\t]/, '')
-          cell_phone = cell_phone.to_s.gsub(/[\W\s\t]/, '')
+        # TODO Check if neccesary params are set
+        def make_address(params = {})
+          country = ::Klarna::API.id_for(:country, params[:country])
+          phone = params[:telno].to_s.gsub(/[\W\s\t]/, '')
+          cell_phone = params[:cellno].to_s.gsub(/[\W\s\t]/, '')
           {
-            :fname => firstname,
-            :lname => lastname,
-            :careof  => co_address,
-            :street  => street_address,
-            :house_number => house_number.to_s, #AT/DE/NL only
-            :postno  => zip,
-            :city    => city,
-            :country => country,
-            :telno   => phone,
-            :cellno  => cell_phone,
-            :email   => email
+            :fname        => params[:fname],
+            :lname        => params[:lname],
+            :careof       => params[:careof],
+            :street       => params[:street],
+            :house_number => params[:house_number].to_s, #AT/DE/NL only
+            :postno       => params[:postno],
+            :city         => params[:city],
+            :country      => country,
+            :telno        => phone,
+            :cellno       => cell_phone,
+            :email        => params[:email]
           }.with_indifferent_access
         end
         alias :mk_address :make_address
