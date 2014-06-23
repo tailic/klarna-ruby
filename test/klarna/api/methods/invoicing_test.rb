@@ -8,6 +8,7 @@ describe Klarna::API::Methods::Invoicing do
   INVALID_ORDER_NO = '12312312312312312'
 
   before do
+    #TODO use fixtures!
     valid_credentials!
     @client = Klarna::API::Client.new
     @client.client_ip = '85.230.98.196'

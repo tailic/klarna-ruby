@@ -17,6 +17,8 @@ describe Klarna::API::Methods::Standard do
     @country_sweden = ::Klarna::API::COUNTRIES[:SE]
 
     expose_protected_methods_in @klarna.class
+
+    #TODO use fixtures!
   end
 
   # Spec:

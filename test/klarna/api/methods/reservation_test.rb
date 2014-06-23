@@ -14,6 +14,7 @@ describe Klarna::API::Methods::Reservation do
 
     expose_protected_methods_in @client.class
 
+    #TODO use fixtures!
     @order_items = []
     @order_items << @client.make_goods(1, 'ABC1', "T-shirt 1", 1.00 * 100, 25, 0, :INC_VAT => true)
     @order_items << @client.make_goods(3, 'ABC2', "T-shirt 2", 7.00 * 100, 25, 0, :INC_VAT => true)
