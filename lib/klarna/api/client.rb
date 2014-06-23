@@ -115,7 +115,7 @@ module Klarna
         end
 
         # Pass additional required digest args to the raw digest method.
-        #
+        # TODO Add proto and client version?
         def digest(*args)
           options = args.extract_options!
           ::Klarna::API.digest(*[(self.store_id unless options[:store_id] == false), args, self.store_secret].compact.flatten)

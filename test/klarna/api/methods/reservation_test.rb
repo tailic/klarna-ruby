@@ -20,12 +20,19 @@ describe Klarna::API::Methods::Reservation do
     @order_items << @client.make_goods(7, 'ABC3', "T-shirt 3", 17.00 * 100, 25, 0, :INC_VAT => true)
     @order_items_total = (1 * (1.00 * 100) + 3 * (7.00 * 100) + 7 * (17.00 * 100)).to_i
 
-    base_address_se = {:fname => 'Testperson-se', :lname => 'Approved', :street => 'Stårgatan 12', :postno => '12345', :city => 'Ankeborg', :country => :SE, :telno => '076 526 00 00', :cellno => '076 526 00 00', :email => 'youremail@email.com'}
-    base_address_de = {:fname => 'Testperson-de', :lname => 'Approved', :street => 'Hellersbergstraße', :postno => '41460', :city => 'Neuss', :country => :DE, :telno => '015 22 11 33 56', :cellno => '01522113356', :email => 'youremail@email.com', :house_number => '14'}
+    @order_items_changed = []
+    @order_items_changed << @client.make_goods(2, 'ABC1', "T-shirt 1", 1.00 * 100, 25, 0, :INC_VAT => true)
+    @order_items_changed << @client.make_goods(3, 'ABC2', "T-shirt 2", 7.00 * 100, 25, 0, :INC_VAT => true)
+    @order_items_changed << @client.make_goods(7, 'ABC3', "T-shirt 3", 17.00 * 100, 25, 0, :INC_VAT => true)
+    @order_items_total_changed = (2 * (1.00 * 100) + 3 * (7.00 * 100) + 7 * (17.00 * 100)).to_i
+
+    base_address_se = {:fname => 'Testperson-se', :lname => 'Approved', :street => 'Stårgatan 12', :postno => '12345', :city => 'Ankeborg', :country => :SE, :telno => '076 526 00 00', :cellno => '076 526 00 00', :email => 'always_approved@klarna.com'}
+    base_address_de = {:fname => 'Testperson-de', :lname => 'Approved', :street => 'Hellersbergstraße', :postno => '41460', :city => 'Neuss', :country => :DE, :telno => '015 22 11 33 56', :cellno => '01522113356', :email => 'always_approved@klarna.com', :house_number => '14'}
 
     denied_address = {:lname => 'Denied'}
     pending_order = {:email => 'pending_accepted@klarna.com'}
     denied_order = {:email => 'pending_denied@klarna.com'}
+    always_approved = {:email => 'always_approved@klarna.com'}
     
     @address_approved_SE = @client.make_reservation_address(base_address_se)
     @address_denied_SE = @client.make_reservation_address(base_address_se.merge denied_address)
@@ -122,11 +129,11 @@ describe Klarna::API::Methods::Reservation do
   end
 
   # Spec: http://integration.klarna.com/en/api/advanced-integration/functions/activatereservation
-  describe '#activate_reservation' do
-    it 'should be defined' do
-      assert_respond_to @client, :activate_reservation
-    end
-  end
+  # describe '#activate_reservation' do
+  #   it 'should be defined' do
+  #     assert_respond_to @client, :activate_reservation
+  #   end
+  # end
 
   # Spec: http://integration.klarna.com/en/api/advanced-integration/functions/cancelreservation
   describe '#cancel_reservation' do
@@ -173,19 +180,64 @@ describe Klarna::API::Methods::Reservation do
     end
   end
 
-  # Spec: http://integration.klarna.com/en/api/advanced-integration/functions/changereservation
-  describe '#change_reservation' do
+  describe '#update' do
     it 'should be defined' do
-      assert_respond_to @client, :change_reservation
+      assert_respond_to @client, :update
+    end
+
+    it 'should update a reservation with valid goods_list arguments' do
+      reservation_no, invoice_status = @client.reserve_amount(@approved_reservation_DE)
+      status = @client.update reservation_no, { :goods_list => @order_items_changed }
+      assert_equal 'ok' , status
+    end
+
+    it 'should update a reservation with valid delivery address arguments' do
+      reservation_no, invoice_status = @client.reserve_amount(@approved_reservation_DE)
+      status = @client.update reservation_no, { :dlv => @address_order_pending_DE }
+      assert_equal 'ok' , status
+    end
+
+    it 'should update a reservation with valid order id' do
+      reservation_no, invoice_status = @client.reserve_amount(@approved_reservation_DE)
+      status = @client.update reservation_no, { :orderid1 => '123ABC' }
+      assert_equal 'ok' , status
+    end
+
+    it 'should raise error for when trying to update a reservation with different addresses for delivery and billing' do
+      assert_raises ::Klarna::API::Errors::KlarnaServiceError do
+        reservation_no, invoice_status = @client.reserve_amount(@approved_reservation_DE)
+        status = @client.update reservation_no, { :dlv_addr => @address_approved_SE, :bill_addr => @address_approved_DE }
+      end
+    end
+
+    it 'should raise error for when trying to update with an invalid reservation number' do
+      assert_raises ::Klarna::API::Errors::KlarnaServiceError do
+        reservation_no, invoice_status = @client.reserve_amount(@approved_reservation_DE)
+        status = @client.update '098765432', { :goods_list => @order_items_changed }
+      end
+    end
+
+    it 'should raise error for when trying to update with no update information given' do
+      assert_raises ::Klarna::API::Errors::KlarnaServiceError do
+        reservation_no, invoice_status = @client.reserve_amount(@approved_reservation_DE)
+        status = @client.update '098765432', { }
+      end
     end
   end
 
+  # Spec: http://integration.klarna.com/en/api/advanced-integration/functions/changereservation
+  # describe '#change_reservation' do
+  #   it 'should be defined' do
+  #     assert_respond_to @client, :change_reservation
+  #   end
+  # end
+
   # Spec: http://integration.klarna.com/en/api/advanced-integration/functions/reserveocrnums
-  describe '#reserve_ocr_numbers' do
-    it 'should be defined' do
-      assert_respond_to @client, :reserve_ocr_numbers
-    end
-  end
+  # describe '#reserve_ocr_numbers' do
+  #   it 'should be defined' do
+  #     assert_respond_to @client, :reserve_ocr_numbers
+  #   end
+  # end
 
   # http://integration.klarna.com/en/api/advanced-integration/functions/mkaddress
   describe '#make_reservation_address' do

@@ -2,5 +2,5 @@
 
 stores:
   test:
-    id: 2
-    secret: lakrits
+    id: 200
+    secret: test
