@@ -33,7 +33,6 @@ describe Klarna::API::Methods::Reservation do
     denied_address = {:lname => 'Denied'}
     pending_order = {:email => 'pending_accepted@klarna.com'}
     denied_order = {:email => 'pending_denied@klarna.com'}
-    always_approved = {:email => 'always_approved@klarna.com'}
     
     @address_approved_SE = @client.make_reservation_address(base_address_se)
     @address_denied_SE = @client.make_reservation_address(base_address_se.merge denied_address)
@@ -44,7 +43,6 @@ describe Klarna::API::Methods::Reservation do
     @address_denied_DE   = @client.make_reservation_address(base_address_de.merge denied_address)
     @address_order_pending_DE   = @client.make_reservation_address(base_address_de.merge pending_order)
     @address_order_denied_DE   = @client.make_reservation_address(base_address_de.merge denied_order)
-
 
     @approved_reservation_DE = {pno: '07071960', amount: @order_items_total, order_id: '1234567', delivery_address: @address_approved_DE, billing_address: @address_approved_DE, currency: :EUR, country: :DE, language: :DE, goods_list: @order_items, pno_encoding: 6 }
     @pending_reservation_DE = {pno: '07071960', amount: @order_items_total, order_id: '1234567', delivery_address: @address_order_pending_DE, billing_address: @address_order_pending_DE, currency: :EUR, country: :DE, language: :DE, goods_list: @order_items, pno_encoding: 6 }
