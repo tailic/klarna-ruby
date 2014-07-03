@@ -22,7 +22,7 @@ module Klarna
   class KlarnaConfigError < ::StandardError
   end
 
-  DEFAULT_STORE_CONFIG_FILE = File.join(ENV['HOME'], '.klarna.yml') unless defined?(::Klarna::DEFAULT_STORE_CONFIG_FILE)
+  #DEFAULT_STORE_CONFIG_FILE = File.join(ENV['HOME'], '.klarna.yml') unless defined?(::Klarna::DEFAULT_STORE_CONFIG_FILE)
   VALID_COUNTRIES = [:SE, :NO, :FI, :DK, :DE] unless defined?(::Klarna::VALID_COUNTRIES)
   DEFAULT_COUNTRY = VALID_COUNTRIES.first unless defined?(::Klarna::DEFAULT_COUNTRY)
   DEFAULT_MODE = :test unless defined?(::Klarna::DEFAULT_MODE)
@@ -61,8 +61,8 @@ module Klarna
 
   # Path to a YAML file containing API credentials - used only if +store_id+ and +store_secret+ are not set.
   # Default: +"~/.klarna.yml"+
-  mattr_accessor :store_config_file
-  @@store_config_file = ::Klarna::DEFAULT_STORE_CONFIG_FILE
+  # mattr_accessor :store_config_file
+  # @@store_config_file = ::Klarna::DEFAULT_STORE_CONFIG_FILE
 
   # The logger to use in log mode.
   # Default: +::Logger.new(::STDOUT)+
@@ -92,7 +92,7 @@ module Klarna
     #
     def setup
       yield self
-      self.load_credentials_from_file unless self.store_id || self.store_secret
+      #self.load_credentials_from_file unless self.store_id || self.store_secret
     end
     alias :configure :setup
 
@@ -104,7 +104,7 @@ module Klarna
       self.store_id = nil
       self.store_secret = nil
       self.store_pclasses = nil
-      self.store_config_file = ::Klarna::DEFAULT_STORE_CONFIG_FILE
+      #self.store_config_file = ::Klarna::DEFAULT_STORE_CONFIG_FILE
       self.logger = ::Logger.new(::STDOUT)
       self.logging = false
       self.http_logging = false
@@ -129,16 +129,16 @@ module Klarna
 
     # Optional: Try to load credentials from a system file.
     #
-    def load_credentials_from_file(force = false)
-      begin
-        store_config = File.open(self.store_config_file) { |file| YAML.load(file).with_indifferent_access }
-        self.store_id = store_config[self.mode][:store_id] if force || self.store_id.nil?
-        self.store_secret = store_config[self.mode][:store_secret] if force || self.store_secret.nil?
-        self.store_pclasses = store_config[self.mode][:store_pclasses] if force || self.store_pclasses.nil?
-      rescue
-        raise KlarnaConfigError, "Could not load store details from: #{self.store_config_file.inspect}"
-      end
-    end
+    # def load_credentials_from_file(force = false)
+    #   begin
+    #     store_config = File.open(self.store_config_file) { |file| YAML.load(file).with_indifferent_access }
+    #     self.store_id = store_config[self.mode][:store_id] if force || self.store_id.nil?
+    #     self.store_secret = store_config[self.mode][:store_secret] if force || self.store_secret.nil?
+    #     self.store_pclasses = store_config[self.mode][:store_pclasses] if force || self.store_pclasses.nil?
+    #   rescue
+    #     raise KlarnaConfigError, "Could not load store details from: #{self.store_config_file.inspect}"
+    #   end
+    # end
 
     def store_id=(value)
       @@store_id = value ? value.to_i : value
