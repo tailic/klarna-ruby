@@ -23,7 +23,7 @@ module Klarna
   end
 
   DEFAULT_STORE_CONFIG_FILE = File.join(ENV['HOME'], '.klarna.yml') unless defined?(::Klarna::DEFAULT_STORE_CONFIG_FILE)
-  VALID_COUNTRIES = [:SE, :NO, :FI, :DK] unless defined?(::Klarna::VALID_COUNTRIES)
+  VALID_COUNTRIES = [:SE, :NO, :FI, :DK, :DE] unless defined?(::Klarna::VALID_COUNTRIES)
   DEFAULT_COUNTRY = VALID_COUNTRIES.first unless defined?(::Klarna::DEFAULT_COUNTRY)
   DEFAULT_MODE = :test unless defined?(::Klarna::DEFAULT_MODE)
 
