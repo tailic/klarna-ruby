@@ -22,7 +22,7 @@ VALID_STORE_ID      = ENV['KLARNA_ESTORE_ID'].presence || KLARNA_ESTORE_ID
 VALID_STORE_SECRET  = ENV['KLARNA_ESTORE_SECRET'].presence || KLARNA_ESTORE_SECRET
 VALID_COUNTRY       = :SE
 
-Klarna.store_config_file = File.join(File.dirname(__FILE__), 'fixtures', 'klarna.yml')
+#Klarna.store_config_file = File.join(File.dirname(__FILE__), 'fixtures', 'klarna.yml')
 
 FIXTURES_FILES = {
   :persons => File.join(File.dirname(__FILE__), 'fixtures', 'api', 'persons.yml'),
