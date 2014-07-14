@@ -3,6 +3,6 @@ rvm:
   - 2.0.0
   - 2.1.1
 env:
-  - KLARNA_ESTORE=200,test
+  - KLARNA_ESTORE=1961,ZeoGUFYS3LBBrrh
 notifications:
   disabled: true
