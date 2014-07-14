@@ -17,7 +17,7 @@ describe Klarna do
 
       # TODO: Add additional countries
       it 'should have values: SE, NO, FI, DK' do
-        assert_equal [:SE, :NO, :FI, :DK], Klarna::VALID_COUNTRIES
+        assert_equal [:SE, :NO, :FI, :DK, :DE], Klarna::VALID_COUNTRIES
       end
     end
 
@@ -113,22 +113,22 @@ describe Klarna do
       # end
     end
 
-    describe '.store_config_file' do
-      it 'should be defined' do
-        assert_respond_to Klarna, :mode
-      end
-
-      it 'should have default setting: nil' do
-        Klarna.reset!
-        assert_equal File.join(ENV['HOME'], '.klarna.yml'), Klarna.store_config_file
-      end
-
-      it 'should be configurable' do
-        swap Klarna, :store_config_file => '/path/to/a/file' do
-          assert_equal '/path/to/a/file', Klarna.store_config_file
-        end
-      end
-    end
+    # describe '.store_config_file' do
+    #   it 'should be defined' do
+    #     assert_respond_to Klarna, :mode
+    #   end
+    #
+    #   it 'should have default setting: nil' do
+    #     Klarna.reset!
+    #     assert_equal File.join(ENV['HOME'], '.klarna.yml'), Klarna.store_config_file
+    #   end
+    #
+    #   it 'should be configurable' do
+    #     swap Klarna, :store_config_file => '/path/to/a/file' do
+    #       assert_equal '/path/to/a/file', Klarna.store_config_file
+    #     end
+    #   end
+    # end
 
     describe '.logger' do
       it 'should be defined' do
@@ -189,15 +189,15 @@ describe Klarna do
       end
     end
 
-    describe '.load_credentials_from_file' do
-      it 'should be defined' do
-        assert_respond_to Klarna, :load_credentials_from_file
-      end
-
-      it 'should load settings from a external YAML config file' do
-        # TODO: Test loading settings from fixtures/klarna.yml
-      end
-    end
+    # describe '.load_credentials_from_file' do
+    #   it 'should be defined' do
+    #     assert_respond_to Klarna, :load_credentials_from_file
+    #   end
+    #
+    #   it 'should load settings from a external YAML config file' do
+    #     # TODO: Test loading settings from fixtures/klarna.yml
+    #   end
+    # end
 
   end
 
