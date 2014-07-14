@@ -5,7 +5,7 @@ describe Klarna do
 
   before do
     Klarna.reset!
-    Klarna.store_config_file = File.join(File.dirname(__FILE__), 'fixtures', 'klarna.yml')
+    #Klarna.store_config_file = File.join(File.dirname(__FILE__), 'fixtures', 'klarna.yml')
   end
 
   describe "Constants" do
