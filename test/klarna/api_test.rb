@@ -148,36 +148,6 @@ describe ::Klarna::API do
       end
     end
 
-    describe '.encode' do
-      it 'should be defined' do
-        assert_respond_to ::Klarna::API, :encode
-      end
-
-      it 'should encode a specified string from "UTF-8" to "ISO-8859-1" properly' do
-        if RUBY_VERSION > '1.9'
-          assert_equal 'ISO-8859-1', ::Klarna::API.encode("ÅÄÖ".force_encoding('UTF-8')).encoding.name
-        else
-          ::Iconv rescue require 'iconv'
-          assert_equal 1, ::Klarna::API.encode("Ö").length # if it is UTF-8 String#length returns 2 bytes in Ruby < 1.9
-        end
-      end
-    end
-
-    describe '.decode' do
-      it 'should be defined' do
-        assert_respond_to ::Klarna::API, :decode
-      end
-
-      it 'should encode a specified string from "ISO-8859-1" to "UTF-8" properly' do
-        if RUBY_VERSION > '1.9'
-          assert_equal 'UTF-8', ::Klarna::API.decode("ÅÄÖ".force_encoding('ISO-8859-1')).encoding.name
-        else
-          ::Iconv rescue require 'iconv'
-          assert_equal 2, ::Klarna::API.decode("Ö").length # if it is UTF-8 String#length returns 2 bytes in Ruby < 1.9
-        end
-      end
-    end
-
   end
 
 end

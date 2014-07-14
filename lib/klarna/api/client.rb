@@ -100,7 +100,7 @@ module Klarna
           {
             :'Accept-Encoding' => 'gzip,deflate',
             :'Content-Type' => "text/xml;charset=#{::Klarna::API::PROTOCOL_ENCODING}",
-            :'Accept-Charset' => 'iso-8859-1', # REVISIT: 'UTF-8,ISO-8859-1,US-ASCII',
+            :'Accept-Charset' => 'utf-8', # REVISIT: 'UTF-8,ISO-8859-1,US-ASCII',
             :'Connection' => 'close',
             :'User-Agent' => 'ruby/xmlrpc' # Note: Default "User-Agent" gives 400-error.
           }.with_indifferent_access

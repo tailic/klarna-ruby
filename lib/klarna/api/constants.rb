@@ -20,7 +20,7 @@ module Klarna
         }
       }.freeze
 
-      PROTOCOL_ENCODING = 'iso-8859-1'.freeze # NOTE: New API supports: ['UTF-8', 'ISO-8859-1', 'US-ASCII'].freeze
+      PROTOCOL_ENCODING = 'utf-8'.freeze # NOTE: New API supports: ['UTF-8', 'ISO-8859-1', 'US-ASCII'].freeze
       PROTOCOL_VERSION = '4.1'.freeze
 
       # -----------------------------------------------------------------------

@@ -256,19 +256,19 @@ describe Klarna::API::Client do
         assert_respond_to @client, :content_type_headers
       end
 
-      it 'should have header: Accept-Charset: iso-8859-1' do
-        assert_equal 'iso-8859-1', @client.send(:content_type_headers)['Accept-Charset']
+      it 'should have header: Accept-Charset: utf-8' do
+        assert_equal 'utf-8', @client.send(:content_type_headers)['Accept-Charset']
       end
 
       it 'should have header: Content-Type: text/xml;charset=iso-8859-1' do
-        assert_equal 'text/xml;charset=iso-8859-1', @client.send(:'content_type_headers')['Content-Type']
+        assert_equal 'text/xml;charset=utf-8', @client.send(:'content_type_headers')['Content-Type']
       end
 
       it 'should have header: Connection: close' do
         assert_equal 'close', @client.send(:content_type_headers)['Connection']
       end
 
-      it 'should have header: Accept-Charset: iso-8859-1' do
+      it 'should have header: Accept-Charset: utf-8' do
         assert_equal 'ruby/xmlrpc', @client.send(:content_type_headers)['User-Agent']
       end
     end
