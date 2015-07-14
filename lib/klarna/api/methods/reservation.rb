@@ -8,7 +8,6 @@ module Klarna
         # To check an invoice or a reservation order status if it is ok, pending or denied.
         #
         def check_order_status(params)
-          
           xmlrpc_params = [
             ::Klarna::API::PROTOCOL_VERSION,
             ::XMLRPC::Client::USER_AGENT,
@@ -37,7 +36,7 @@ module Klarna
               store_id,
               ::Klarna::API.digest(signature),
               params[:reservation_no],
-              {}
+              {params[:flag]}
           ]
 
           #TODO optional infos see below
