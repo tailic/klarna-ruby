@@ -36,7 +36,7 @@ module Klarna
               store_id,
               ::Klarna::API.digest(signature),
               params[:reservation_no],
-              {:flags => params[:flag]}
+              params[:optional_info] || {}
           ]
 
           #TODO optional infos see below
