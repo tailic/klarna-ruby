@@ -28,22 +28,26 @@ module Klarna
               ::XMLRPC::Client::USER_AGENT,
               store_id,
               params[:reservation_no],
+              params[:flags] || nil,
+              params[:orderid1] || nil,
+              params[:orderid2] || nil,
+              params[:reference] || nil,
+              params[:reference_code] || nil,
               store_secret
-          ]
+          ].compact
+
           xmlrpc_params = [
               ::Klarna::API::PROTOCOL_VERSION,
               ::XMLRPC::Client::USER_AGENT,
               store_id,
               ::Klarna::API.digest(signature),
               params[:reservation_no],
-              params[:optional_info] || {}
+              {}
           ]
 
-          #TODO optional infos see below
-          # %w{orderid1 orderid2 flags reference reference_code ocr bclass cust_no artnos artno qty}.each do |attr|
-          #   attr = attr.to_sym
-          #   xmlrpc_params.push params[attr] if params[attr]
-          # end
+          [:orderid1, :orderid2, :flags, :reference, :reference_code, :ocr, :bclass, :cust_no, :artnos, :artno, :qty].each do |attr|
+            xmlrpc_params.last.merge!({attr => params[attr]}) if params[attr]
+          end
 
           self.call(:activate, *xmlrpc_params).tap do |result|
             result = result.first
